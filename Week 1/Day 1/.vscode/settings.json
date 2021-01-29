@@ -1,0 +1,6 @@
+{
+    "editor.fontSize": 20,
+    "terminal.integrated.fontSize": 24,
+    "workbench.colorTheme": "Default Dark+",
+    "workbench.iconTheme": "vscode-icons"
+}

@@ -1,0 +1,35 @@
+# Rest API vs GraphQL
+
+## Rest API : Req Resp HTTP MEthid, post put get pull pacth delete
+post : insert
+put : update
+pacth : update
+delete : delete
+get : ambil data
+
+
+
+## GraphQL : Hanya Menggunakan method post, dan untuk queriyng data Menggunakan body
+
+MockUp API | Blue Print API | API Kontrak VS Documentation API | POST DEV API
+
+
+Sebelum dev :
+- "supaya tidak ada perbedaam "  BE & FE
+-ketika project diminta pembuatanya secara pararel
+- BE & FE itu dev yang di waktu yang sama
+
+MockUp API -> Front End
+MockUp API -> Dibuat Back End
+
+url staging API -> Front End
+
+Sesuda Atau Saat dev :
+Documentation API
+
+
+Mockup API
+
+Apiary
+Mockoon
+SpotLight
