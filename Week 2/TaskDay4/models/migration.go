@@ -6,24 +6,24 @@ import (
 	"gorm.io/gorm"
 )
 
-//Migration
+// Migrations func
 func Migrations(db *gorm.DB) {
-	var checkProvince, checkDistricts, checkRelation bool
+	var checkTableProvinces, checkTableDistricts, checkConstraint bool
 
-	checkProvince = db.Migrator().HasTable(&Provinces{})
-	if !checkProvince {
+	checkTableProvinces = db.Migrator().HasTable(&Provinces{})
+	if !checkTableProvinces {
 		db.Migrator().CreateTable(&Provinces{})
-		fmt.Println("create table provinces")
+		fmt.Println("Create Table Provinces")
 	}
 
-	checkDistricts = db.Migrator().HasTable(&Districts{})
-	if !checkDistricts {
+	checkTableDistricts = db.Migrator().HasTable(&Districts{})
+	if !checkTableDistricts {
 		db.Migrator().CreateTable(&Districts{})
-		fmt.Println("create table districts")
+		fmt.Println("Create Table Districts")
 	}
 
-	checkRelation = db.Migrator().HasConstraint(&Provinces{}, "District")
-	if !checkRelation {
+	checkConstraint = db.Migrator().HasConstraint(&Provinces{}, "District")
+	if !checkConstraint {
 		db.Migrator().CreateConstraint(&Provinces{}, "District")
 	}
 }

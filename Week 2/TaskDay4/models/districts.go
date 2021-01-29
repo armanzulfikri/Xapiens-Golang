@@ -2,10 +2,9 @@ package models
 
 import "gorm.io/gorm"
 
-//Province sample
-
+// Districts model
 type Districts struct {
 	gorm.Model
-	Name        string
-	ProvincesID uint
+	Name       string
+	ProvinceID uint
 }

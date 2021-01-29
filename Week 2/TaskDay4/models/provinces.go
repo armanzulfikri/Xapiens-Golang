@@ -2,10 +2,9 @@ package models
 
 import "gorm.io/gorm"
 
-//Province sample
-
+// Provinces model
 type Provinces struct {
 	Name string
 	gorm.Model
-	Districts []Districts `gorm:"foreignKey:ProvinceID"`
+	District []Districts `gorm:"foreignKey:ProvinceID"`
 }
