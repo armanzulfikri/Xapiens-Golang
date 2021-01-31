@@ -75,15 +75,17 @@ func (strDB *StrDB) GetOneSubDistricts(c *gin.Context) {
 //Update District
 func (strDB *StrDB) UpdateSubDistrict(c *gin.Context) {
 	var (
-		subdistricts []models.SubDistricts
+		subdistricts models.SubDistricts
 		result       gin.H
 	)
 	id := c.Param("id")
+	name := c.PostForm("name")
 	if err := c.Bind(&subdistricts); err != nil {
 		fmt.Println("No Data or something wrong happen!!!")
 	} else {
-		strDB.DB.Where("id = ?", id).First(&subdistricts)
-		c.BindJSON(&subdistricts)
+		strDB.DB.Where("id = ?", id).Find(&subdistricts)
+		subdistricts.Name = name
+
 		strDB.DB.Save(&subdistricts)
 		c.JSON(http.StatusOK, result)
 	}

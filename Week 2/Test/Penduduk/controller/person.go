@@ -81,14 +81,30 @@ func (strDB *StrDB) GetOnePerson(c *gin.Context) {
 //Update District
 func (strDB *StrDB) UpdatePerson(c *gin.Context) {
 	var (
-		persons []models.Persons
+		persons models.Persons
 		result  gin.H
 	)
 	id := c.Param("id")
+	nip := c.PostForm("nip")
+	fullName := c.PostForm("fullName")
+	lastName := c.PostForm("lastName")
+	birthDate := c.PostForm("birthDate")
+	birthPlace := c.PostForm("birthPlace")
+	gender := c.PostForm("gender")
+	zonaLocation := c.PostForm("zonaLocation")
+
 	if err := c.Bind(&persons); err != nil {
 		fmt.Println("No Data or something wrong happen!!!")
 	} else {
-		strDB.DB.Where("id = ?", id).First(&persons)
+		strDB.DB.Where("id = ?", id).Find(&persons)
+		persons.Nip = nip
+		persons.FullName = fullName
+		persons.LastName = lastName
+		persons.BirthDate = birthDate
+		persons.BirthPlace = birthPlace
+		persons.Gender = gender
+		persons.ZonaLocation = zonaLocation
+
 		result = gin.H{
 			"message": "success Update Data",
 		}

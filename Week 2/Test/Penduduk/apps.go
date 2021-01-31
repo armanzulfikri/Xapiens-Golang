@@ -24,28 +24,28 @@ func main() {
 	//route Province
 	r.POST("/province", strDB.PostCreateProvince)
 	r.GET("/province", strDB.GetReadProvince)
-	r.GET("/province/find/", strDB.GetOneProvince)
+	r.GET("/province", strDB.GetOneProvince)
 	r.PUT("/province/:id", strDB.UpdateProvince)
 	r.DELETE("/province/delete/:id", strDB.DeleteProvince)
 
 	//route District
 	r.POST("/district", strDB.PostCreateDistrict)
 	r.GET("/district", strDB.GetAllDistrict)
-	r.GET("/district/:id", strDB.GetOneDistricts)
+	r.GET("/district", strDB.GetOneDistricts)
 	r.PUT("/district/:id", strDB.UpdateDistrict)
 	r.DELETE("/district/delete/:id", strDB.DeleteDistrict)
 
 	//route Subdistrict
 	r.POST("/subdistrict", strDB.PostCreateSubDistrict)
 	r.GET("/subdistrict", strDB.GetAllSubDistrict)
-	r.GET("/subdistrict/:id", strDB.GetOneSubDistricts)
+	r.GET("/subdistrict", strDB.GetOneSubDistricts)
 	r.PUT("/subdistrict/:id", strDB.UpdateSubDistrict)
 	r.DELETE("/subdistrict/delete/:id", strDB.DeleteSubDistrict)
 
 	//route Person
 	r.POST("/person", strDB.PostCreatePerson)
 	r.GET("/person", strDB.GetAllPerson)
-	r.GET("/person/:id", strDB.GetOnePerson)
+	r.GET("/person", strDB.GetOnePerson)
 	r.PUT("/person/:id", strDB.UpdatePerson)
 	r.DELETE("/person/delete/:id", strDB.DeletePerson)
 	r.Run()

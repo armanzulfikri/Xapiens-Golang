@@ -70,14 +70,22 @@ func (strDB *StrDB) GetOneProvince(c *gin.Context) {
 //update Province
 func (strDB *StrDB) UpdateProvince(c *gin.Context) {
 	var (
-		province []models.Provinces
+		province models.Provinces
+		result   gin.H
 	)
-	provinceID := c.Param("id")
-	if err := strDB.DB.Where("id = ?", provinceID).First(&province).Error; err != nil {
-		c.AbortWithStatus(404)
-		fmt.Println(err)
+	id := c.Param("id")
+	name := c.PostForm("name")
+	if err := c.Bind(&province); err != nil {
+		fmt.Println("No Data or something wrong happen!!!")
 	} else {
-		c.JSON(200, province)
+		strDB.DB.Where("id = ?", id).Find(&province)
+		province.Name = name
+
+		result = gin.H{
+			"message": "success Update Data",
+		}
+		strDB.DB.Save(&province)
+		c.JSON(http.StatusOK, result)
 	}
 }
 

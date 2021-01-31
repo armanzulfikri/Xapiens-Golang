@@ -62,8 +62,8 @@ func (strDB *StrDB) GetOneDistricts(c *gin.Context) {
 		districts []models.Districts
 		result    gin.H
 	)
-	id := c.Query("id")
-	strDB.DB.First(&districts, id)
+	id := c.Query("ID")
+	strDB.DB.Find(&districts, id)
 	if length := len(districts); length <= 0 {
 		result = ResponAPINil(districts, length)
 	} else {
@@ -75,14 +75,17 @@ func (strDB *StrDB) GetOneDistricts(c *gin.Context) {
 //Update District
 func (strDB *StrDB) UpdateDistrict(c *gin.Context) {
 	var (
-		districts []models.Districts
+		districts models.Districts
 		result    gin.H
 	)
 	id := c.Param("id")
+	name := c.PostForm("name")
 	if err := c.Bind(&districts); err != nil {
 		fmt.Println("No Data or something wrong happen!!!")
 	} else {
-		strDB.DB.Where("id = ?", id).First(&districts)
+		strDB.DB.Where("id = ?", id).Find(&districts)
+		districts.Name = name
+
 		result = gin.H{
 			"message": "success Update Data",
 		}
