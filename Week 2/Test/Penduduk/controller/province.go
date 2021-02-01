@@ -42,6 +42,7 @@ func (strDB *StrDB) GetReadProvince(c *gin.Context) {
 	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "10"))
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 
+	strDB.DB.Preload("Districts").Find(&province)
 	paginator := helpers.Paging(&helpers.Param{
 		DB:      strDB.DB,
 		Page:    page,
@@ -58,12 +59,54 @@ func (strDB *StrDB) GetOneProvince(c *gin.Context) {
 		result   gin.H
 	)
 	id := c.Query("id")
-	strDB.DB.First(&province, id)
+	strDB.DB.
+		Preload("Districts").
+		Preload("Districts.SubDistricts").
+		Find(&province, id)
 	if length := len(province); length <= 0 {
 		result = ResponAPINil(province, length)
 	} else {
 		result = ResponAPI(province, length)
 	}
+	c.JSON(http.StatusOK, result)
+}
+
+// GetListProvinceDistrictSubDistrictRename comment
+func (strDB *StrDB) GetListProvinceDistrictSubDistrictRename(c *gin.Context) {
+	type SubDistricts struct {
+		Name       string `json:"name"`
+		ID         uint   `gorm:"primarykey" json:"id"`
+		DistrictID uint   `json:"district_id"`
+	}
+	type Districts struct {
+		Name         string         `json:"name"`
+		ID           uint           `gorm:"primarykey" json:"id"`
+		ProvinceID   uint           `json:"province_id"`
+		SubDistricts []SubDistricts `gorm:"foreignKey:DistrictID" json:"sub_districts"`
+	}
+	type Provinces struct {
+		Name      string      `json:"name"`
+		Districts []Districts `gorm:"foreignKey:ProvinceID" json:"districts"`
+		ID        uint        `gorm:"primarykey" json:"id"`
+	}
+
+	var (
+		province []Provinces
+		result   gin.H
+	)
+
+	strDB.DB.
+		// Joins("JOIN districts on districts.province_id=provinces.id").
+		// Joins("JOIN sub_districts on sub_districts.district_id=districts.id").
+		Preload("Districts").
+		Preload("Districts.SubDistricts").
+		Find(&province)
+	if length := len(province); length <= 0 {
+		result = ResponAPINil(province, length)
+	} else {
+		result = ResponAPI(province, length)
+	}
+
 	c.JSON(http.StatusOK, result)
 }
 

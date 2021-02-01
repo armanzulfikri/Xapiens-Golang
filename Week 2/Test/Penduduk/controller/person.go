@@ -123,3 +123,31 @@ func (strDB *StrDB) DeletePerson(c *gin.Context) {
 	fmt.Println(d)
 	c.JSON(200, gin.H{"id #" + id: "deleted"})
 }
+
+func (strDB *StrDB) UpdateProfile(c *gin.Context) {
+	var (
+		persons models.Persons
+		result  gin.H
+	)
+
+	id := c.Param("id")
+
+	file, _ := c.FormFile("photo")
+	fmt.Println(file.Filename)
+	fmt.Println(file.Size)
+	fmt.Println(file.Header)
+	path := "images/" + file.Filename
+
+	if err := c.SaveUploadedFile(file, path); err != nil {
+		fmt.Println("Terjadi Error ", err.Error())
+	}
+
+	strDB.DB.Where("id = ?", id).Find(&persons)
+	persons.Photo = file.Filename
+	result = gin.H{
+		"message": "success Uploadfoto",
+	}
+	strDB.DB.Save(&persons)
+	c.JSON(http.StatusOK, result)
+
+}

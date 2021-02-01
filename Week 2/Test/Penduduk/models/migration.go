@@ -10,6 +10,11 @@ import (
 func Migrations(db *gorm.DB) {
 	var checkTableProvinces, checkTableDistricts, checkTableSubDistricts, checkTablePerson bool
 
+	db.Migrator().DropTable(&Provinces{})
+	db.Migrator().DropTable(&SubDistricts{})
+	db.Migrator().DropTable(&Districts{})
+	db.Migrator().DropTable(&Persons{})
+
 	checkTableProvinces = db.Migrator().HasTable(&Provinces{})
 	if !checkTableProvinces {
 		db.Migrator().CreateTable(&Provinces{})

@@ -4,7 +4,8 @@ import "gorm.io/gorm"
 
 // Districts model
 type Districts struct {
+	Name string
 	gorm.Model
-	Name       string
-	ProvinceID uint
+	ProvinceID   uint
+	SubDistricts []SubDistricts `gorm:"foreignKey:DistrictID`
 }

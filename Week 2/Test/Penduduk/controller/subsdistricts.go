@@ -25,7 +25,7 @@ func (strDB *StrDB) PostCreateSubDistrict(c *gin.Context) {
 			"message": "success",
 			"data": map[string]interface{}{
 				"ID":          subdistricts.ID,
-				"district_Id": subdistricts.DistrictsID,
+				"district_Id": subdistricts.DistrictID,
 				"name":        subdistricts.Name,
 				"created_at":  subdistricts.CreatedAt,
 				"update_at":   subdistricts.UpdatedAt,
