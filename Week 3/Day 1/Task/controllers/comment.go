@@ -30,6 +30,11 @@ func (strDB *StrDB) PostDataFromCommentsAPI() {
 	}
 
 	strDB.DB.Create(&comments)
+	fmt.Println(comments.PostId)
+	fmt.Println(comments.ID)
+	fmt.Println(comments.Name)
+	fmt.Println(comments.Email)
+	fmt.Println(comments.Body)
 }
 
 //Get Data Comments

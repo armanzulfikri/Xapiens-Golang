@@ -30,6 +30,11 @@ func (strDB *StrDB) PostDataFromPhotosAPI() {
 	}
 
 	strDB.DB.Create(&photos)
+	fmt.Println(photos.AlbumID)
+	fmt.Println(photos.ID)
+	fmt.Println(photos.Title)
+	fmt.Println(photos.ThumbnailUrl)
+	fmt.Println(photos.Url)
 }
 
 //Get Data Photos

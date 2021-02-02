@@ -30,6 +30,9 @@ func (strDB *StrDB) PostDataFromAlbumAPI() {
 	}
 
 	strDB.DB.Create(&albums)
+	fmt.Println(albums.UserId)
+	fmt.Println(albums.ID)
+	fmt.Println(albums.Title)
 }
 
 //Get Data Comments
