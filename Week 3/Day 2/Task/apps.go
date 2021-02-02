@@ -5,6 +5,7 @@ import (
 
 	"pendudukApp/config"
 	"pendudukApp/controller"
+
 	"pendudukApp/models"
 
 	"github.com/gin-gonic/gin"
@@ -28,28 +29,28 @@ func main() {
 
 	//route Province
 	r.POST("/province", strDB.Midleware, strDB.PostCreateProvince)
-	r.GET("/province", strDB.GetListProvinceDistrictSubDistrictRename)
+	r.GET("/province", strDB.Midleware, strDB.GetListProvinceDistrictSubDistrictRename)
 	r.GET("/province/find", strDB.GetOneProvince)
 	r.PUT("/province/:id", strDB.UpdateProvince)
 	r.DELETE("/province/delete/:id", strDB.DeleteProvince)
 
 	//route District
-	r.POST("/district", strDB.PostCreateDistrict)
-	r.GET("/district", strDB.GetAllDistrict)
+	r.POST("/district", strDB.Midleware, strDB.PostCreateDistrict)
+	r.GET("/district", strDB.Midleware, strDB.GetAllDistrict)
 	r.GET("/district/find", strDB.GetOneDistricts)
 	r.PUT("/district/:id", strDB.UpdateDistrict)
 	r.DELETE("/district/delete/:id", strDB.DeleteDistrict)
 
 	//route Subdistrict
-	r.POST("/subdistrict", strDB.PostCreateSubDistrict)
-	r.GET("/subdistrict", strDB.GetAllSubDistrict)
+	r.POST("/subdistrict", strDB.Midleware, strDB.PostCreateSubDistrict)
+	r.GET("/subdistrict", strDB.Midleware, strDB.GetAllSubDistrict)
 	r.GET("/subdistrict/find", strDB.GetOneSubDistricts)
 	r.PUT("/subdistrict/:id", strDB.UpdateSubDistrict)
 	r.DELETE("/subdistrict/delete/:id", strDB.DeleteSubDistrict)
 
 	//route Person
-	r.POST("/person", strDB.PostCreatePerson)
-	r.GET("/person", strDB.GetAllPerson)
+	r.POST("/person", strDB.Midleware, strDB.PostCreatePerson)
+	r.GET("/person", strDB.Midleware, strDB.GetAllPerson)
 	r.GET("/person/find", strDB.GetOnePerson)
 	r.PUT("/person/:id", strDB.UpdatePerson)
 	r.DELETE("/person/delete/:id", strDB.DeletePerson)
