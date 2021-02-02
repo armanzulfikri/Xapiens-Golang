@@ -24,23 +24,25 @@ func (strDB *StrDB) PostDataFromCommentsAPI() {
 	}
 
 	stringBody := string(body)
+	fmt.Println(stringBody)
 
 	if error := json.Unmarshal([]byte(stringBody), &comments); error != nil {
 		fmt.Println("error", error.Error())
 	}
 
 	strDB.DB.Create(&comments)
-	fmt.Println(comments.PostId)
-	fmt.Println(comments.ID)
-	fmt.Println(comments.Name)
-	fmt.Println(comments.Email)
-	fmt.Println(comments.Body)
+
 }
 
 //Get Data Comments
 func (strDB *StrDB) GetComments() {
 	var comments models.Comments
 
-	result := strDB.DB.Find(&comments)
-	fmt.Println(result)
+	strDB.DB.Find(&comments)
+	fmt.Println(comments.PostId)
+	fmt.Println(comments.ID)
+	fmt.Println(comments.Name)
+	fmt.Println(comments.Email)
+	fmt.Println(comments.Body)
+
 }

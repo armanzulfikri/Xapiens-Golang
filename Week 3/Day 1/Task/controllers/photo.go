@@ -30,17 +30,17 @@ func (strDB *StrDB) PostDataFromPhotosAPI() {
 	}
 
 	strDB.DB.Create(&photos)
-	fmt.Println(photos.AlbumID)
-	fmt.Println(photos.ID)
-	fmt.Println(photos.Title)
-	fmt.Println(photos.ThumbnailUrl)
-	fmt.Println(photos.Url)
 }
 
 //Get Data Photos
 func (strDB *StrDB) GetPhotos() {
 	var photos models.Photos
 
-	result := strDB.DB.Find(&photos)
-	fmt.Println(result)
+	strDB.DB.Find(&photos)
+	fmt.Println(photos.AlbumID)
+	fmt.Println(photos.ID)
+	fmt.Println(photos.ThumbnailUrl)
+	fmt.Println(photos.Url)
+	fmt.Println(photos.Title)
+
 }

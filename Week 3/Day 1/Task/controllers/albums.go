@@ -24,21 +24,21 @@ func (strDB *StrDB) PostDataFromAlbumAPI() {
 	}
 
 	stringBody := string(body)
+	fmt.Println(stringBody)
 
 	if error := json.Unmarshal([]byte(stringBody), &albums); error != nil {
 		fmt.Println("error", error.Error())
 	}
 
 	strDB.DB.Create(&albums)
-	fmt.Println(albums.UserId)
-	fmt.Println(albums.ID)
-	fmt.Println(albums.Title)
 }
 
 //Get Data Comments
 func (strDB *StrDB) GetAlbums() {
 	var albums models.Albums
 
-	result := strDB.DB.Find(&albums)
-	fmt.Println(result)
+	strDB.DB.Find(&albums)
+	fmt.Println(albums.ID)
+	fmt.Println(albums.UserId)
+	fmt.Println(albums.Title)
 }
