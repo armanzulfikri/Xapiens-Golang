@@ -88,8 +88,8 @@ func Sentry(data string) {
 	sentry.CaptureMessage(data)
 }
 
-//Authorized
-func Authorized(c *gin.Context) {
+//Authentication
+func Authentication(c *gin.Context) {
 	var Admin, Guest string
 	if err := godotenv.Load(".env"); err != nil {
 		log.Fatal("Error Load .env file")
