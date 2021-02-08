@@ -1,20 +1,23 @@
 package controller
 
 import (
-	"fmt"
+	"CasePoint3/models"
+	"net/http"
 
-	"gorm.io/gorm"
+	"github.com/gin-gonic/gin"
 )
 
 //SumGender func
-func SumGender(db *gorm.DB) {
-	type NResult struct {
-		N int64
-	}
+func (strDB *StrDB) SumGender(c *gin.Context) {
+	var person models.Persons
+	query := "SELECT COUNT(gender) FROM persons"
+	// pria := strDB.DB.Model(&person).Where("gender = ?", "M").Count(&count)
+	wanita := strDB.DB.Model(&person).Select(query)
+	result :=
+		gin.H{
+			"meesage": "Data Find",
 
-	var n NResult
-
-	db.Table("persons").Select("sum(gender) as g").Scan(&n)
-
-	fmt.Println(n.N)
+			"Wanita": wanita,
+		}
+	c.JSON(http.StatusOK, result)
 }

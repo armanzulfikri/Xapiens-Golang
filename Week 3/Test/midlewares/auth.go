@@ -51,6 +51,7 @@ func Auth(c *gin.Context) {
 			}
 			log.Println("User :", dataUser["email"])
 			LogTerminal(c)
+			MidlewareSentry(c)
 			c.JSON(http.StatusUnauthorized, result)
 			c.Abort()
 		} else {
@@ -60,6 +61,7 @@ func Auth(c *gin.Context) {
 			}
 			log.Println("User :", dataUser["email"])
 			LogTerminal(c)
+			MidlewareSentry(c)
 			c.JSON(http.StatusAccepted, result)
 		}
 	} else if dataUser["role"] != "admin" {
@@ -69,6 +71,7 @@ func Auth(c *gin.Context) {
 			}
 			log.Println("User :", dataUser["email"])
 			LogTerminal(c)
+			MidlewareSentry(c)
 			c.JSON(http.StatusUnauthorized, result)
 			c.Abort()
 		} else {
@@ -78,6 +81,7 @@ func Auth(c *gin.Context) {
 			}
 			log.Println("User :", dataUser["email"])
 			LogTerminal(c)
+			MidlewareSentry(c)
 			c.JSON(http.StatusAccepted, result)
 		}
 	} else {
@@ -86,6 +90,7 @@ func Auth(c *gin.Context) {
 		}
 		log.Println("User :", dataUser["email"])
 		LogTerminal(c)
+		MidlewareSentry(c)
 		c.JSON(http.StatusAccepted, result)
 	}
 

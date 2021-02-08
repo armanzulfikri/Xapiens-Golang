@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -21,6 +22,13 @@ func (strDB *StrDB) PostCreatePerson(c *gin.Context) {
 	if err := c.Bind(&persons); err != nil {
 		fmt.Println("No Data or something wrong happen!!!")
 	} else {
+		file, _ := c.FormFile("photo")
+		path := "images/" + file.Filename
+
+		if err := c.SaveUploadedFile(file, path); err != nil {
+			fmt.Println("Terjadi Error ", err.Error())
+		}
+		persons.Photo = strconv.FormatUint(uint64(persons.ID), 10) + strings.ToLower(file.Filename) + " " + time.Now().String()
 		strDB.DB.Create(&persons)
 		result = gin.H{
 			"message": "success",
@@ -34,6 +42,7 @@ func (strDB *StrDB) PostCreatePerson(c *gin.Context) {
 				"birth_date":      persons.BirthDate,
 				"birth_place":     persons.BirthPlace,
 				"gender":          persons.Gender,
+				"photo":           persons.Photo,
 				"zona_location":   persons.ZonaLocation,
 				"created_at":      persons.CreatedAt,
 				"update_at":       persons.UpdatedAt,
@@ -136,6 +145,19 @@ func (strDB *StrDB) UpdateProfile(c *gin.Context) {
 
 	id := c.Param("id")
 	file, _ := c.FormFile("photo")
+
+	if file.Size > 800000 && file.Header["Content-Type"][0] != "image/jpg" || file.Header["Content-Type"][0] != "image/png" {
+		result := gin.H{
+			"Error": "must upload photo under 200kb and Format PNG or JPG",
+		}
+		c.JSON(http.StatusBadRequest, result)
+		return
+	} else {
+		result := gin.H{
+			"Message": "Upload Photo Confirmed",
+		}
+		c.JSON(http.StatusBadRequest, result)
+	}
 	path := "images/" + file.Filename
 
 	if err := c.SaveUploadedFile(file, path); err != nil {
@@ -143,11 +165,10 @@ func (strDB *StrDB) UpdateProfile(c *gin.Context) {
 	}
 
 	strDB.DB.Where("id = ?", id).Find(&persons)
-	persons.Photo = file.Filename + time.Now().String()
+	persons.Photo = id + "_" + strings.ToLower(file.Filename) + "_" + time.Now().String()
 	result = gin.H{
 		"message": "success Uploadfoto",
 	}
 	strDB.DB.Save(&persons)
 	c.JSON(http.StatusOK, result)
-
 }
