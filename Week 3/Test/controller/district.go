@@ -50,8 +50,6 @@ func (strDB *StrDB) GetAllDistrict(c *gin.Context) {
 		Limit:   limit,
 		OrderBy: []string{"id desc"},
 		ShowSQL: true,
-		Join:    "left join provinces on provinces.id = districts.province_id",
-		Query:   "districts.id, districts.name, provinces.name as province",
 	}, &districts)
 
 	c.JSON(http.StatusOK, paginator)
