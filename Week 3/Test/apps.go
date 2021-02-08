@@ -81,6 +81,6 @@ func main() {
 
 	//Report Router
 
-	r.GET("/report/gender", strDB.SumGender)
+	r.GET("/report", strDB.SumGender)
 	r.Run()
 }

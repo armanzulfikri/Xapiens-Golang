@@ -10,14 +10,32 @@ import (
 //SumGender func
 func (strDB *StrDB) SumGender(c *gin.Context) {
 	var person models.Persons
-	query := "SELECT COUNT(gender) FROM persons"
-	// pria := strDB.DB.Model(&person).Where("gender = ?", "M").Count(&count)
-	wanita := strDB.DB.Model(&person).Select(query)
-	result :=
-		gin.H{
-			"meesage": "Data Find",
+	var countM int64
+	var countF int64
 
-			"Wanita": wanita,
+	gender := c.Query("gender")
+
+	if gender == "M" {
+		strDB.DB.Model(&person).Where("gender = ?", "M").Count(&countM)
+		result :=
+			gin.H{
+				"meesage": "Data Laki Laki ",
+				"count":   countM,
+			}
+		c.JSON(http.StatusFound, result)
+	} else if gender == "F" {
+		strDB.DB.Model(&person).Where("gender = ?", "F").Count(&countF)
+		result :=
+			gin.H{
+				"meesage": "Data Perempuan",
+				"count":   countF,
+			}
+		c.JSON(http.StatusFound, result)
+	} else {
+		result := gin.H{
+			"meesage": "Please Search M or F",
 		}
-	c.JSON(http.StatusOK, result)
+		c.JSON(http.StatusNotFound, result)
+	}
+
 }
