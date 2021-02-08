@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -134,11 +135,7 @@ func (strDB *StrDB) UpdateProfile(c *gin.Context) {
 	)
 
 	id := c.Param("id")
-
 	file, _ := c.FormFile("photo")
-	fmt.Println(file.Filename)
-	fmt.Println(file.Size)
-	fmt.Println(file.Header)
 	path := "images/" + file.Filename
 
 	if err := c.SaveUploadedFile(file, path); err != nil {
@@ -146,7 +143,7 @@ func (strDB *StrDB) UpdateProfile(c *gin.Context) {
 	}
 
 	strDB.DB.Where("id = ?", id).Find(&persons)
-	persons.Photo = file.Filename
+	persons.Photo = file.Filename + time.Now().String()
 	result = gin.H{
 		"message": "success Uploadfoto",
 	}

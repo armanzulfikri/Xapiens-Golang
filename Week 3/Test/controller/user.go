@@ -1,10 +1,13 @@
 package controller
 
 import (
+	"CasePoint3/helper"
 	"CasePoint3/models"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
@@ -42,7 +45,7 @@ func (strDB *StrDB) LoginUser(c *gin.Context) {
 			userDB.Email,
 			userDB.Role,
 			jwt.StandardClaims{
-				ExpiresAt: time.Now().Add(time.Hour * 48).Unix(),
+				ExpiresAt: time.Now().Add(time.Minute * 15).Unix(),
 				IssuedAt:  time.Now().Unix(),
 			},
 		}
@@ -72,4 +75,103 @@ func (strDB *StrDB) LoginUser(c *gin.Context) {
 		}
 	}
 	c.JSON(http.StatusOK, result)
+}
+
+//Register func
+func (strDB *StrDB) Register(c *gin.Context) {
+	var (
+		user   models.Users
+		result gin.H
+	)
+	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if err != nil {
+		log.Println("Error -> ", err.Error())
+	}
+	if err := c.Bind(&user); err != nil {
+		fmt.Println("No Data or something wrong happen!!!")
+	} else {
+		user.Password = string(hash)
+		strDB.DB.Create(&user)
+		result = gin.H{
+			"message": "success",
+			"data": map[string]interface{}{
+				"ID":         user.ID,
+				"email":      user.Email,
+				"password":   user.Password,
+				"role":       user.Role,
+				"created_at": user.CreatedAt,
+				"update_at":  user.UpdatedAt,
+			},
+		}
+		c.JSON(http.StatusOK, result)
+	}
+}
+
+//GetAllUser func
+func (strDB *StrDB) GetAllUser(c *gin.Context) {
+	var (
+		users []models.Users
+	)
+
+	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "5"))
+	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+
+	paginator := helper.Paging(&helper.Param{
+		DB:      strDB.DB,
+		Page:    page,
+		Limit:   limit,
+		OrderBy: []string{"id desc"},
+		ShowSQL: true,
+	}, &users)
+
+	c.JSON(http.StatusOK, paginator)
+}
+
+//GetOneUser func
+func (strDB *StrDB) GetOneUser(c *gin.Context) {
+	var (
+		users  []models.Users
+		result gin.H
+	)
+	id := c.Query("ID")
+	strDB.DB.Find(&users, id)
+	if length := len(users); length <= 0 {
+		result = ResponAPINil(users, length)
+	} else {
+		result = ResponAPI(users, length)
+	}
+	c.JSON(http.StatusOK, result)
+}
+
+//UpdateUser func
+func (strDB *StrDB) UpdateUser(c *gin.Context) {
+	var (
+		users  models.Users
+		result gin.H
+	)
+	id := c.Param("id")
+	email := c.PostForm("email")
+	if err := c.Bind(&users); err != nil {
+		fmt.Println("No Data or something wrong happen!!!")
+	} else {
+		strDB.DB.Where("id = ?", id).Find(&users)
+		users.Email = email
+
+		result = gin.H{
+			"message": "success Update Data",
+		}
+		strDB.DB.Save(&users)
+		c.JSON(http.StatusOK, result)
+	}
+}
+
+//DeleteUsers func
+func (strDB *StrDB) DeleteUsers(c *gin.Context) {
+	var (
+		users []models.Users
+	)
+	id := c.Param("id")
+	d := strDB.DB.Where("id = ?", id).Delete(&users)
+	fmt.Println(d)
+	c.JSON(200, gin.H{"id #" + id: "deleted"})
 }

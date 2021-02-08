@@ -32,19 +32,6 @@ func MiddlewareSentryLog(c *gin.Context) {
 	Sentry(messageSentry)
 }
 
-//SentryMonitoring func
-func SentryMonitoring() {
-	err := sentry.Init(sentry.ClientOptions{
-		TracesSampleRate: 0.2,
-		TracesSampler: sentry.TracesSamplerFunc(func(ctx sentry.SamplingContext) sentry.Sampled {
-			return sentry.SampledTrue
-		}),
-	})
-	if err != nil {
-		log.Fatalf("sentry.Init : %s", err)
-	}
-}
-
 //MidlewareSentry func
 func MidlewareSentry(c *gin.Context) {
 	responseURL := c.Request.URL.Path

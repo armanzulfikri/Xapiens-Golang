@@ -30,7 +30,7 @@ func main() {
 	seeders.SeedOfficePersonLocation(pgDB)
 
 	r := gin.Default()
-
+	r.MaxMultipartMemory = 1 << 20
 	//route Province
 	r.POST("/province", midlewares.Auth, strDB.PostCreateProvince)
 	r.GET("/province", midlewares.Auth, strDB.GetListProvinceDistrictSubDistrictRename)
@@ -75,6 +75,10 @@ func main() {
 
 	//user Router
 	r.POST("/user/login", strDB.LoginUser)
+	r.POST("/user/Register", strDB.Register)
+	r.PUT("/user/:id", midlewares.Auth, strDB.UpdateOffices)
+	r.DELETE("/user/delete/:id", midlewares.Auth, strDB.DeleteOffices)
 
+	//Report Rout
 	r.Run()
 }
