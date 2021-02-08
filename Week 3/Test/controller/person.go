@@ -23,6 +23,18 @@ func (strDB *StrDB) PostCreatePerson(c *gin.Context) {
 		fmt.Println("No Data or something wrong happen!!!")
 	} else {
 		file, _ := c.FormFile("photo")
+		if file.Size > 800000 && file.Header["Content-Type"][0] != "image/jpg" || file.Header["Content-Type"][0] != "image/png" {
+			result := gin.H{
+				"Error": "must upload photo under 200kb and Format PNG or JPG",
+			}
+			c.JSON(http.StatusBadRequest, result)
+			return
+		} else {
+			result := gin.H{
+				"Message": "Upload Photo Confirmed",
+			}
+			c.JSON(http.StatusBadRequest, result)
+		}
 		path := "images/" + file.Filename
 
 		if err := c.SaveUploadedFile(file, path); err != nil {
