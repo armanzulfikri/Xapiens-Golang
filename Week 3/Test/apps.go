@@ -32,11 +32,11 @@ func main() {
 	r := gin.Default()
 
 	//route Province
-	r.POST("/province", midlewares.Auth, strDB.PostCreateProvince)
+	r.POST("/province", midlewares.Corn, strDB.PostCreateProvince)
 	r.GET("/province", midlewares.Auth, strDB.GetListProvinceDistrictSubDistrictRename)
 	r.GET("/province/find", midlewares.Auth, strDB.GetOneProvince)
-	r.PUT("/province/:id", midlewares.Auth, strDB.UpdateProvince)
-	r.DELETE("/province/delete/:id", midlewares.Auth, strDB.DeleteProvince)
+	r.PUT("/province/:id", midlewares.Corn, strDB.UpdateProvince)
+	r.DELETE("/province/delete/:id", midlewares.Corn, strDB.DeleteProvince)
 
 	//route District
 	r.POST("/district", midlewares.Auth, strDB.PostCreateDistrict)

@@ -1,0 +1,8 @@
+Backup database
+Fetch database
+Notifikasi
+Agregation data
+Checking data third party
+Handling queue
+
+--> dan lain lain
