@@ -121,7 +121,7 @@ var mutationType = graphql.NewObject(
 	graphql.ObjectConfig{
 		Name: "Mutation",
 		Fields: graphql.Fields{
-			"create": &graphql.Field{
+			"createproduct": &graphql.Field{
 				Type:        productType,
 				Description: "Create new product",
 				Args: graphql.FieldConfigArgument{
@@ -175,7 +175,7 @@ var mutationType = graphql.NewObject(
 					return store, nil
 				},
 			},
-			"update": &graphql.Field{
+			"updateproduct": &graphql.Field{
 				Type:        productType,
 				Description: "Update Product",
 				Args: graphql.FieldConfigArgument{
@@ -248,6 +248,50 @@ var mutationType = graphql.NewObject(
 							stores[i].Location = location
 							store = stores[i]
 							break
+						}
+					}
+					return store, nil
+				},
+			},
+			"deleteproduct": &graphql.Field{
+				Type:        productType,
+				Description: "Delete Product",
+				Args: graphql.FieldConfigArgument{
+					"id": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+				},
+
+				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+
+					id, _ := params.Args["id"].(int)
+					product := Products{}
+					for i, v := range products {
+						if int64(id) == v.ID {
+							product = products[i]
+							products = append(products[:i], products[i+1:]...)
+						}
+					}
+					return product, nil
+				},
+			},
+			"deletestore": &graphql.Field{
+				Type:        storeType,
+				Description: "Delete Store",
+				Args: graphql.FieldConfigArgument{
+					"id": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+				},
+
+				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+
+					id, _ := params.Args["id"].(int)
+					store := Stores{}
+					for i, v := range stores {
+						if int64(id) == v.ID {
+							store = stores[i]
+							stores = append(stores[:i], stores[i+1:]...)
 						}
 					}
 					return store, nil
