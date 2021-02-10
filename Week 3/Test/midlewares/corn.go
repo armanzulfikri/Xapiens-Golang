@@ -71,7 +71,7 @@ func Corn(c *gin.Context) {
 
 //runCron func
 func runCron() {
-	gocron.Every(5).Second().Do(SendMailInisial)
+	gocron.Every(10).Minute().Do(SendMailInisial)
 	<-gocron.Start()
 }
 
