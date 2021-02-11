@@ -12,6 +12,22 @@ import (
 	"gorm.io/gorm"
 )
 
+// RajaongkirProvince model
+type RajaongkirProvince struct {
+	RajaOngkir ProvinceResponse `json:"rajaongkir"`
+}
+
+// ProvinceResponse model
+type ProvinceResponse struct {
+	ProvinceResults []ProvinceResult `json:"results"`
+}
+
+// ProvinceResult model
+type ProvinceResult struct {
+	ProvinceID string `json:"province_id"`
+	Province   string `json:"province"`
+}
+
 // SeedProvince func
 func SeedProvince(db *gorm.DB) {
 	//Scraping Data From Raja Ongkir
@@ -28,7 +44,7 @@ func SeedProvince(db *gorm.DB) {
 	}
 
 	var (
-		response models.RajaongkirProvince
+		response RajaongkirProvince
 		province models.Provinces
 	)
 
