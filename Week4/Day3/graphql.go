@@ -26,6 +26,15 @@ type Stores struct {
 	Location string `json:"location"`
 }
 
+//Provinces model
+type Provinces struct {
+	ID        int64  `json:"id"`
+	Name      string `json:"name"`
+	CreatedAt string `json:"created_at"`
+	UpdatedAt string `json:"update_at"`
+	DeleteAt  string `json:"delete_at"`
+}
+
 var products = []Products{
 	{
 		ID:    1,
@@ -55,6 +64,9 @@ var stores = []Stores{
 		Location: "yogya",
 	},
 }
+
+
+
 
 var productType = graphql.NewObject(
 	graphql.ObjectConfig{
