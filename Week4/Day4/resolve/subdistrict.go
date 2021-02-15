@@ -30,7 +30,7 @@ func CreateSubDistrict(params graphql.ResolveParams) (interface{}, error) {
 	var subDistrict models.SubDistricts
 
 	subDistrict.ID = uint(rand.Intn(100000))
-	subDistrict.DistrictID = params.Args["district_id"].(uint)
+	subDistrict.DistrictID = uint(params.Args["district_id"].(int))
 	subDistrict.Name = params.Args["name"].(string)
 
 	db.Create(&subDistrict)
@@ -40,31 +40,24 @@ func CreateSubDistrict(params graphql.ResolveParams) (interface{}, error) {
 //UpdateSubDistrict func
 func UpdateSubDistrict(params graphql.ResolveParams) (interface{}, error) {
 	db := config.Connect()
-	id, _ := params.Args["id"].(int)
-	name, checkName := params.Args["name"].(string)
-	districtID := params.Args["district_id"].(uint)
+	id := params.Args["id"].(int)
+	name := params.Args["name"].(string)
+	districtID := uint(params.Args["district_id"].(int))
 
-	var subDistrict []models.SubDistricts
-	for i, v := range subDistrict {
-		if uint(id) == v.ID {
-			if checkName {
-				subDistrict[i].Name = name
-				subDistrict[i].DistrictID = districtID
-			}
-			db.Save(&subDistrict)
-		}
-	}
+	var subDistrict models.SubDistricts
+
+	db.Model(&subDistrict).Where("id = ?", id).Updates(models.SubDistricts{Name: name, DistrictID: districtID})
 	return subDistrict, nil
 }
 
 //DeleteSubDistrict func
 func DeleteSubDistrict(params graphql.ResolveParams) (interface{}, error) {
 	db := config.Connect()
-	id, _ := params.Args["id"].(int)
+	id := uint(params.Args["id"].(int))
 
 	var subDistrict models.SubDistricts
 
-	db.Delete(subDistrict, id)
+	db.Delete(&subDistrict, id)
 
 	return subDistrict, nil
 }

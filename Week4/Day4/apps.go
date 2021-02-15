@@ -3,9 +3,11 @@ package main
 import (
 	"fmt"
 	"golangGraphql/config"
+	"golangGraphql/middlewares"
 	"golangGraphql/models"
 	"golangGraphql/seeders"
 	"golangGraphql/service"
+
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -25,9 +27,10 @@ func main() {
 	seeders.SeedPerson(pgDB)
 	seeders.SeedOffice(pgDB)
 	seeders.SeedOfficePersonLocation(pgDB)
+	seeders.SeedUser(pgDB)
 
 	r := gin.Default()
-	r.POST("/", func(c *gin.Context) {
+	r.POST("/", middlewares.MidlewareSentry, func(c *gin.Context) {
 		type Query struct {
 			Query string `json:"query"`
 		}

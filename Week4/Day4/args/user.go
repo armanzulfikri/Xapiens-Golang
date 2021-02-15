@@ -20,7 +20,10 @@ func CreateUserArgs() graphql.FieldConfigArgument {
 //LoginUserArgs func
 func LoginUserArgs() graphql.FieldConfigArgument {
 	return graphql.FieldConfigArgument{
-		"token": &graphql.ArgumentConfig{
+		"email": &graphql.ArgumentConfig{
+			Type: graphql.NewNonNull(graphql.String),
+		},
+		"password": &graphql.ArgumentConfig{
 			Type: graphql.NewNonNull(graphql.String),
 		},
 	}

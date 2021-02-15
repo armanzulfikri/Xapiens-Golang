@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/graphql-go/graphql"
 	"github.com/joho/godotenv"
@@ -53,20 +53,21 @@ func RegisterUser(params graphql.ResolveParams) (interface{}, error) {
 
 //LoginUser func
 func LoginUser(params graphql.ResolveParams) (interface{}, error) {
-	db := config.Connect()
 	var (
 		user   models.Users
-		userDB models.Users
-		result gin.H
+		result interface{}
 	)
 
-	if err := db.Find(&user); err != nil {
-		log.Println("Data tidak ada, error mesage : cannot found user ")
-	}
+	db := config.Connect()
+	email := params.Args["email"].(string)
+	password := params.Args["password"].(string)
+	db.Where("email = ?", email).First(&user)
 
-	db.Where("email = ?", user.Email).First(&userDB)
-	if err := bcrypt.CompareHashAndPassword([]byte(userDB.Password), []byte(user.Password)); err != nil {
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
 		log.Println("Email", user.Email, "Password Salah")
+		result = gin.H{
+			"message": "email atau password anda salah",
+		}
 	} else {
 		type authCustomClaims struct {
 			Email string `json:"email"`
@@ -74,8 +75,8 @@ func LoginUser(params graphql.ResolveParams) (interface{}, error) {
 			jwt.StandardClaims
 		}
 		Claims := &authCustomClaims{
-			userDB.Email,
-			userDB.Role,
+			user.Email,
+			user.Role,
 			jwt.StandardClaims{
 				ExpiresAt: time.Now().Add(time.Minute * 15).Unix(),
 				IssuedAt:  time.Now().Unix(),
@@ -106,6 +107,36 @@ func LoginUser(params graphql.ResolveParams) (interface{}, error) {
 			}
 		}
 	}
-
 	return result, nil
+}
+
+//comparePassword func
+func comparePassword(password string, passwordHash string) error {
+	err := bcrypt.CompareHashAndPassword([]byte(passwordHash), []byte(password))
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const exp = "24h"
+
+//createToken func
+func createToken(user string) (string, error) {
+
+	exp, err := time.ParseDuration(exp)
+	if err != nil {
+
+		return "", err
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"username": user,
+		"iat":      time.Now().Unix(),
+		"exp":      time.Now().Add(exp).Unix(),
+	})
+	s, err := token.SignedString([]byte(os.Getenv("SECRET_TOKEN")))
+	if err != nil {
+		return "", err
+	}
+	return s, nil
 }

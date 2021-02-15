@@ -64,10 +64,10 @@ func CreatePerson(params graphql.ResolveParams) (interface{}, error) {
 //UpdatePerson func
 func UpdatePerson(params graphql.ResolveParams) (interface{}, error) {
 	db := config.Connect()
-	id, _ := params.Args["id"].(int)
+	id := uint(params.Args["id"].(int))
 	subDistrictID := params.Args["subdistrict_id"].(uint)
 	nip := params.Args["nip"].(string)
-	fullName, checkName := params.Args["full_name"].(string)
+	fullName := params.Args["full_name"].(string)
 	firstName := params.Args["first_name"].(string)
 	lastName := params.Args["last_name"].(string)
 	birthDate := params.Args["birth_date"].(string)
@@ -77,34 +77,31 @@ func UpdatePerson(params graphql.ResolveParams) (interface{}, error) {
 	zonaLocation := params.Args["zona_location"].(string)
 
 	var person []models.Persons
-	for i, v := range person {
-		if uint(id) == v.ID {
-			if checkName {
-				person[i].SubDistrictID = subDistrictID
-				person[i].Nip = nip
-				person[i].FullName = fullName
-				person[i].FirstName = firstName
-				person[i].LastName = lastName
-				person[i].BirthDate = birthDate
-				person[i].BirthPlace = birthPlace
-				person[i].Gender = gender
-				person[i].Photo = photo
-				person[i].ZonaLocation = zonaLocation
-			}
-			db.Save(&person)
-		}
-	}
+
+	db.Model(&person).Where("id = ?", id).Updates(models.Persons{
+		SubDistrictID: subDistrictID,
+		Nip:           nip,
+		FullName:      fullName,
+		FirstName:     firstName,
+		LastName:      lastName,
+		BirthDate:     birthDate,
+		BirthPlace:    birthPlace,
+		Gender:        gender,
+		Photo:         photo,
+		ZonaLocation:  zonaLocation,
+	})
+
 	return person, nil
 }
 
 //DeletePerson func
 func DeletePerson(params graphql.ResolveParams) (interface{}, error) {
 	db := config.Connect()
-	id, _ := params.Args["id"].(int)
+	id := uint(params.Args["id"].(int))
 
 	var person models.Persons
 
-	db.Delete(person, id)
+	db.Delete(&person, id)
 
 	return person, nil
 }

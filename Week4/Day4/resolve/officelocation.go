@@ -12,15 +12,15 @@ import (
 //GetOfficeLocation func
 func GetOfficeLocation(params graphql.ResolveParams) (interface{}, error) {
 	dbPG := config.Connect()
-	type OfficeLocation struct {
+	type OfficesLocation struct {
 		Name          string `json:"name"`
 		ID            uint   `gorm:"primarykey" json:"id"`
-		SubDistrictID uint   `gorm:"foreignkey:SubDistrictID" json:"subdistrict"`
+		SubDistrictID uint   `gorm:"foreignkey:SubDistrictID" json:"subdistrict_id"`
 	}
 
-	var officeLocation []OfficeLocation
-	dbPG.Find(&officeLocation)
-	return officeLocation, nil
+	var officesLocation []OfficesLocation
+	dbPG.Find(&officesLocation)
+	return officesLocation, nil
 }
 
 //CreateOfficeLocation func
@@ -40,31 +40,24 @@ func CreateOfficeLocation(params graphql.ResolveParams) (interface{}, error) {
 //UpdateOfficeLocation func
 func UpdateOfficeLocation(params graphql.ResolveParams) (interface{}, error) {
 	db := config.Connect()
-	id, _ := params.Args["id"].(int)
-	name, checkName := params.Args["name"].(string)
+	id := uint(params.Args["id"].(int))
+	name := params.Args["name"].(string)
 	subDistrictID := params.Args["subdistrict_id"].(uint)
 
 	var officeLocation []models.OfficesLocation
-	for i, v := range officeLocation {
-		if uint(id) == v.ID {
-			if checkName {
-				officeLocation[i].Name = name
-				officeLocation[i].SubDistrictID = subDistrictID
-			}
-			db.Save(&officeLocation)
-		}
-	}
+
+	db.Model(&officeLocation).Where("id = ?", id).Updates(models.OfficesLocation{Name: name, SubDistrictID: subDistrictID})
 	return officeLocation, nil
 }
 
 //DeleteOfficeLocation func
 func DeleteOfficeLocation(params graphql.ResolveParams) (interface{}, error) {
 	db := config.Connect()
-	id, _ := params.Args["id"].(int)
+	id := uint(params.Args["id"].(int))
 
 	var officeLocation models.OfficesLocation
 
-	db.Delete(officeLocation, id)
+	db.Delete(&officeLocation, id)
 
 	return officeLocation, nil
 }

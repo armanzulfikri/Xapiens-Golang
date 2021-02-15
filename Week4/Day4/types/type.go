@@ -33,6 +33,9 @@ func DistrictType() *graphql.Object {
 				"name": &graphql.Field{
 					Type: graphql.String,
 				},
+				"province_id": &graphql.Field{
+					Type: graphql.Int,
+				},
 			},
 		},
 	)
@@ -50,6 +53,9 @@ func SubDistrictType() *graphql.Object {
 				"name": &graphql.Field{
 					Type: graphql.String,
 				},
+				"district_id": &graphql.Field{
+					Type: graphql.Int,
+				},
 			},
 		},
 	)
@@ -62,6 +68,9 @@ func PersonType() *graphql.Object {
 			Name: "Person",
 			Fields: graphql.Fields{
 				"id": &graphql.Field{
+					Type: graphql.Int,
+				},
+				"subdistrict_id": &graphql.Field{
 					Type: graphql.Int,
 				},
 				"nip": &graphql.Field{
@@ -153,6 +162,9 @@ func User() *graphql.Object {
 					Type: graphql.String,
 				},
 				"role": &graphql.Field{
+					Type: graphql.String,
+				},
+				"token": &graphql.Field{
 					Type: graphql.String,
 				},
 			},

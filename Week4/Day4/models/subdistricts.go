@@ -5,8 +5,7 @@ import "gorm.io/gorm"
 // SubDistricts model
 type SubDistricts struct {
 	gorm.Model
-	Name           string
-	DistrictID     uint
-	Person         []Persons         `gorm:"ForeignKey:SubDistrictID"`
-	OfficeLocation []OfficesLocation `gorm:"ForeignKey:SubDistrictID"`
+	Name       string
+	DistrictID uint
+	Person     []Persons `gorm:"ForeignKey:SubDistrictID"`
 }

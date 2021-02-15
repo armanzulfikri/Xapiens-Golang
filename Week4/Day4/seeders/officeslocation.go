@@ -17,10 +17,10 @@ func SeedOffice(db *gorm.DB) {
 	}
 
 	var office models.OfficesLocation
-	for _, v1 := range officeArray {
-		data, _ := strconv.ParseUint(v1[0], 10, 32)
+	for _, v := range officeArray {
+		data, _ := strconv.ParseUint(v[0], 10, 32)
 		office.SubDistrictID = uint(data)
-		office.Name = v1[1]
+		office.Name = v[1]
 		office.ID = 0
 		db.Create(&office)
 

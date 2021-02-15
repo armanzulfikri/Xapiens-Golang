@@ -60,29 +60,23 @@ func CreateProvince(params graphql.ResolveParams) (interface{}, error) {
 //UpdateProvince func
 func UpdateProvince(params graphql.ResolveParams) (interface{}, error) {
 	db := config.Connect()
-	id, _ := params.Args["id"].(int)
-	name, checkName := params.Args["name"].(string)
+	id := uint(params.Args["id"].(int))
+	name := params.Args["name"].(string)
 
-	var provinces []models.Provinces
-	for i, v := range provinces {
-		if uint(id) == v.ID {
-			if checkName {
-				provinces[i].Name = name
-			}
-			db.Save(&provinces)
-		}
-	}
+	var provinces models.Provinces
+	db.Model(&provinces).Where("id =  ?", id).Update("name", name)
+
 	return provinces, nil
 }
 
 //DeleteProvince func
 func DeleteProvince(params graphql.ResolveParams) (interface{}, error) {
 	db := config.Connect()
-	id, _ := params.Args["id"].(int)
+	id := uint(params.Args["id"].(int))
 
 	var provinces models.Provinces
 
-	db.Delete(provinces, id)
+	db.Where("id = ?", id).Delete(&provinces, id)
 
 	return provinces, nil
 }

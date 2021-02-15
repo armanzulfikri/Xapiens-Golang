@@ -15,7 +15,7 @@ func GetDistrict(params graphql.ResolveParams) (interface{}, error) {
 	type Districts struct {
 		Name       string `json:"name"`
 		ID         uint   `gorm:"primarykey" json:"id"`
-		ProvinceID uint   `gorm:"foreignkey" json:"ProvinceID"`
+		ProvinceID uint   `gorm:"foreignkey" json:"province_id"`
 	}
 
 	var district []Districts
@@ -30,7 +30,7 @@ func CreateDistrict(params graphql.ResolveParams) (interface{}, error) {
 	var districts models.Districts
 
 	districts.ID = uint(rand.Intn(100000))
-	districts.ProvinceID = uint(64)
+	districts.ProvinceID = uint(params.Args["province_id"].(int))
 	districts.Name = params.Args["name"].(string)
 
 	db.Create(&districts)
@@ -40,31 +40,24 @@ func CreateDistrict(params graphql.ResolveParams) (interface{}, error) {
 //UpdateDistricts func
 func UpdateDistricts(params graphql.ResolveParams) (interface{}, error) {
 	db := config.Connect()
-	id, _ := params.Args["id"].(int)
-	name, checkName := params.Args["name"].(string)
-	provinceID := params.Args["province_id"].(uint)
+	id := uint(params.Args["id"].(int))
+	name := params.Args["name"].(string)
+	provinceID := uint(params.Args["province_id"].(int))
 
-	var districts []models.Districts
-	for i, v := range districts {
-		if uint(id) == v.ID {
-			if checkName {
-				districts[i].Name = name
-				districts[i].ProvinceID = provinceID
-			}
-			db.Save(&districts)
-		}
-	}
+	var districts models.Districts
+
+	db.Model(&districts).Where("id = ?", id).Updates(models.Districts{Name: name, ProvinceID: provinceID})
 	return districts, nil
 }
 
 //DeleteDistricts func
 func DeleteDistricts(params graphql.ResolveParams) (interface{}, error) {
 	db := config.Connect()
-	id, _ := params.Args["id"].(int)
+	id := uint(params.Args["id"].(int))
 
 	var districts models.Districts
 
-	db.Delete(districts, id)
+	db.Delete(&districts, id)
 
 	return districts, nil
 }

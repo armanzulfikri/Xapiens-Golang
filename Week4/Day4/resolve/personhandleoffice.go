@@ -40,29 +40,27 @@ func CreatePersonHandleOffice(params graphql.ResolveParams) (interface{}, error)
 //UpdatePersonHandleOffice func
 func UpdatePersonHandleOffice(params graphql.ResolveParams) (interface{}, error) {
 	db := config.Connect()
-	id, _ := params.Args["id"].(int)
+	id := uint(params.Args["id"].(int))
 	officeLocationID := params.Args["office_location_id"].(uint)
 	personID := params.Args["person_id"].(uint)
 
 	var personHadleOfficeLocations []models.PersonHadleOfficeLocations
-	for i, v := range personHadleOfficeLocations {
-		if uint(id) == v.ID {
-			personHadleOfficeLocations[i].PersonID = personID
-			personHadleOfficeLocations[i].OfficeLocationID = officeLocationID
-			db.Save(&personHadleOfficeLocations)
-		}
-	}
+
+	db.Model(&personHadleOfficeLocations).Where("id = ?", id).Updates(models.PersonHadleOfficeLocations{
+		PersonID:         personID,
+		OfficeLocationID: officeLocationID,
+	})
 	return personHadleOfficeLocations, nil
 }
 
 //DeletePersonHandleOffice func
 func DeletePersonHandleOffice(params graphql.ResolveParams) (interface{}, error) {
 	db := config.Connect()
-	id, _ := params.Args["id"].(int)
+	id := uint(params.Args["id"].(int))
 
 	var personHadleOfficeLocations models.PersonHadleOfficeLocations
 
-	db.Delete(personHadleOfficeLocations, id)
+	db.Delete(&personHadleOfficeLocations, id)
 
 	return personHadleOfficeLocations, nil
 }

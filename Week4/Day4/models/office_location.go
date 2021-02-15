@@ -6,6 +6,6 @@ import "gorm.io/gorm"
 type OfficesLocation struct {
 	gorm.Model
 	Name                       string
-	SubDistrictID              uint
+	SubDistrictID              uint                         `json:"subdistrict_id"`
 	PersonHadleOfficeLocations []PersonHadleOfficeLocations `gorm:"ForeignKey:OfficeLocationID"`
 }
